@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 const mongone = require('./mongone.js');
 
-const Post = require('../models/post.js');
+const Post = require('../model/post.js');
 
 const DATABASE_URL = process.env.MONGODB_URI || 'mongodb://localhost:27017/401lab17';
 
@@ -15,25 +15,25 @@ mongoose.connect(DATABASE_URL).then(
     console.error(`Error on connection: ${error}`);
   });
 
-// function getAll() {
-//   return new Promise((resolve, reject) => {
-//     Info.Job.find((err, jobs) => {
-//       resolve(jobs);
-//     });
-//   });
-// }
+function getAll() {
+  return new Promise((resolve, reject) => {
+    Post.find((err, posts) => {
+      resolve(posts);
+    });
+  });
+}
 
-// function get(id) {
-//   return new Promise((resolve, reject) => {
-//     Info.Job.findOne({_id: id}, (err, job) => {
-//       resolve(job);
-//     });
-//   });
-// }
+function get(id) {
+  return new Promise((resolve, reject) => {
+    Post.findOne({_id: id}, (err, post) => {
+      resolve(post);
+    });
+  });
+}
 
 function save(post) {
   let postModel = new Post({
-    userId: id,
+    userId: post.userId,
     content: post.content
   });
   return new Promise((resolve, reject) => {
@@ -46,33 +46,34 @@ function save(post) {
   });
 }
 
-// function update(id, job) {
-//   return new Promise((resolve, reject) => {
-//     Info.Job.findOneAndUpdate(id, job, (err, job) => {
-//       if (err) {
-//         console.error(err);
-//       }
-//       resolve(job);
-//     });
-//   });
-// }
+function update(id, post) {
+  return new Promise((resolve, reject) => {
+    Post.findOneAndUpdate({_id: id}, {content: post.content}, (err, post) => {
+      console.log('lib post', post);
+      if (err) {
+        console.error(err);
+      }
+      resolve(post);
+    });
+  });
+}
 
-// function remove(id) {
-//   return new Promise((resolve, reject) => {
-//     Info.Job.remove({_id: id}, (err, job) => {
-//       if (err) {
-//         console.error(err);
-//       }
-//       resolve(job);
-//     });
-//   });
-// }
+function remove(id) {
+  return new Promise((resolve, reject) => {
+    Post.remove({_id: id}, (err, post) => {
+      if (err) {
+        console.error(err);
+      }
+      resolve(post);
+    });
+  });
+}
 
 
 module.exports = {
   save,
-  // getAll,
-  // get,
-  // update,
-  // remove,
+  getAll,
+  get,
+  update,
+  remove,
 };

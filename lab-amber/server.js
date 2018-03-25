@@ -13,14 +13,19 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/', loginAPI);
-app.use('/', postAPI);
-app.get('*', function(req, res){
-  res.send('Not Found', 404);
+app.use('/api/posts', postAPI);
+app.use(function (err, req, res, next) {
+  res.status(err.status || 500);
+  res.send(err);
+});
+app.get('*', function (req, res) {
+  res.status(404)
+  res.send('Not Found');
 });
 
-app.listen(PORT, ()=> {
+app.listen(PORT, () => {
   console.info(`Listening in at http://localhost:${PORT}.`);
 });

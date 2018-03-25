@@ -7,7 +7,7 @@ const mongone = require('./mongone.js');
 
 const User = require('../model/user.js');
 
-const DATABASE_URL = process.env.MONGODB_URI || 'mongodb://localhost:27017/test';
+const DATABASE_URL = process.env.MONGODB_URI || 'mongodb://localhost:27017/401lab17';
 
 mongoose.connect(DATABASE_URL).then(
   () => {

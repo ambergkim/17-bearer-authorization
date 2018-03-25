@@ -1,8 +1,11 @@
 'use strict';
 
+require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const User = require('../model/user.js');
 const storage = require('../lib/user.js');
@@ -21,9 +24,9 @@ router.post('/api/signup', (req, res) => {
     res.send('Must provide valid JSON in body');
     return;
   }
-  // let payload = authHeader.split('Basic ')[1];
-  // let decoded = Buffer.from(payload, 'base64').toString();
-  // let [username, password] = decoded.split(':');
+  let payload = authHeader.split('Basic ')[1];
+  let decoded = Buffer.from(payload, 'base64').toString();
+  let [username, password] = decoded.split(':');
   let newUser = {
     username: req.body.username,
     email: req.body.email,
@@ -32,7 +35,8 @@ router.post('/api/signup', (req, res) => {
   storage.save(newUser).then(user => {
     res.send({
       username: user.username,
-      email: user.email
+      email: user.email,
+      _id: user._id
     });
   }).catch(err => {
     console.error(err);
@@ -54,7 +58,13 @@ router.get('/api/signin', (req, res) => {
     hash = user.password;
     let isValid = bcrypt.compareSync(password, hash);
     if (isValid) {
-      res.send('Authorized');
+      let token = jwt.sign({username: user.username}, process.env.APP_SECRET, (err, newToken) => {
+        res.status(200);
+        res.send({
+          signedIn: true,
+          token: newToken
+        });
+      });
     } else {
       res.status(401);
       res.send('Unauthorized');
