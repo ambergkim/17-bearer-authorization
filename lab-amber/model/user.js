@@ -18,7 +18,6 @@ User.pre('save', function(next) {
       next();
     });
   } else {
-    console.log('is not new');
     next();
   }
 });
