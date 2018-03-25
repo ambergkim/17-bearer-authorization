@@ -49,7 +49,6 @@ function save(post) {
 function update(id, post) {
   return new Promise((resolve, reject) => {
     Post.findOneAndUpdate({_id: id}, {content: post.content}, (err, post) => {
-      console.log('lib post', post);
       if (err) {
         console.error(err);
       }

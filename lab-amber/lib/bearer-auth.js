@@ -20,7 +20,6 @@ function bearerAuth(req, res, next) {
     User.findOne({ username: decoded.username })
       .then(user => {
         req.user = user;
-        console.log('req.user', req.user);
         next();
       });
   });
